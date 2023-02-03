@@ -557,9 +557,8 @@ mod contract {
     #[no_mangle]
     pub extern "C" fn new_eth_connector() {
         let io = Runtime;
-        // Only the owner can initialize the EthConnector
-        let state = state::get_state(&io).sdk_unwrap();
-        require_owner_only(&state, &io.predecessor_account_id());
+
+        io.assert_private_call().sdk_unwrap();
 
         let args: InitCallArgs = io.read_input_borsh().sdk_unwrap();
         let owner_id = io.current_account_id();
